@@ -5,7 +5,6 @@
 #include <hardware_interface/system_interface.hpp>
 
 #include "mechai_hardwares/transport_interface.hpp"
-#include "mechai_hardwares/hardware_config_loader.hpp"
 
 namespace mechai_hardwares {
   namespace mecanum_wheel_system {

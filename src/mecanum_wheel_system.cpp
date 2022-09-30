@@ -18,32 +18,35 @@ namespace mechai_hardwares {
         hardware_comm_ = std::make_unique<SerialTransport>();
       }
       RCLCPP_INFO(rclcpp::get_logger(mecanum_wheel_system::LOGNAME), "Initialized mecanum wheel system with %s serial transport for hardware comm.", system_info_.hardware_parameters["hardware_transport_type"]);
+
+      return CallbackReturn::SUCCESS;
     }
 
     CallbackReturn MecanumWheelSystem::on_configure(const rclcpp_lifecycle::State &previous_state) {
       hardware_comm_->init();
       hardware_comm_->start_heartbeat();
       
+      return CallbackReturn::SUCCESS;
     }
 
     CallbackReturn MecanumWheelSystem::on_cleanup(const rclcpp_lifecycle::State &previous_state) {
-
+      return CallbackReturn::SUCCESS;
     }
 
     CallbackReturn MecanumWheelSystem::on_shutdown(const rclcpp_lifecycle::State &previous_state) {
-
+      return CallbackReturn::SUCCESS;
     }
 
     CallbackReturn MecanumWheelSystem::on_activate(const rclcpp_lifecycle::State &previous_state) {
-
+      return CallbackReturn::SUCCESS;
     }
 
     CallbackReturn MecanumWheelSystem::on_deactivate(const rclcpp_lifecycle::State &previous_state) {
-
+      return CallbackReturn::SUCCESS;
     }
 
     CallbackReturn MecanumWheelSystem::on_error(const rclcpp_lifecycle::State & previous_state) {
-
+      return CallbackReturn::SUCCESS;
     }
 
     std::vector<hardware_interface::StateInterface> MecanumWheelSystem::export_state_interfaces() {
