@@ -4,19 +4,11 @@
 namespace mechai_hardwares {
   class TransportInterface {
     public:
-      enum Type {
-        ROS,
-        SERIAL
-      };
-
-      TransportInterface();
-
-      virtual bool init() = 0;
       virtual bool send() = 0;
       virtual bool recieve() = 0;
       virtual bool start_heartbeat() = 0;
       virtual bool shutdown() = 0;
   };
-}
+} // namespace mechai_hardwares
 
 #endif

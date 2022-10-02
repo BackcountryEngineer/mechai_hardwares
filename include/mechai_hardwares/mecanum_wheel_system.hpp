@@ -43,6 +43,6 @@ namespace mechai_hardwares {
         std::unique_ptr<TransportInterface> hardware_comm_;
     };
   }
-}
+} // namespace mechai_hardwares
 
 #endif

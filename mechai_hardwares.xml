@@ -1,0 +1,7 @@
+<library path="mechai_hardwares">
+  <class name="mechai_hardwares/MecanumWheelSystem" type="mechai_hardwares::MecanumWheelSystem" base_class_type="hardware_interface::SystemInterface">
+    <description>
+      The mecanum wheel hardware interface with ros2 control, handles sending commands and recieving feedbacks to and from the hardware platform.
+    </description>
+  </class>
+</library>

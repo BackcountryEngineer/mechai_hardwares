@@ -3,8 +3,8 @@
 #include <rclcpp/rclcpp.hpp>
 
 #include "mechai_hardwares/mecanum_wheel_system.hpp"
-#include "mechai_hardwares/ros_transport.hpp"
-#include "mechai_hardwares/serial_transport.hpp"
+#include "mechai_hardwares/uros_pico_transport.hpp"
+#include "mechai_hardwares/i2c_pico_transport.hpp"
 
 namespace mechai_hardwares {
   namespace mecanum_wheel_system {
@@ -13,17 +13,16 @@ namespace mechai_hardwares {
 
       RCLCPP_INFO(rclcpp::get_logger(mecanum_wheel_system::LOGNAME), "Initializing transport for hardware comm");
       if (system_info_.hardware_parameters["hardware_transport_type"] == "ros") {
-        hardware_comm_ = std::make_unique<RosTransport>();
+        hardware_comm_ = std::make_unique<UrosPicoTransport>();
       } else if (system_info_.hardware_parameters["hardware_transport_type"] == "can") {
-        hardware_comm_ = std::make_unique<SerialTransport>();
+        hardware_comm_ = std::make_unique<I2cPicoTransport>();
       }
-      RCLCPP_INFO(rclcpp::get_logger(mecanum_wheel_system::LOGNAME), "Initialized mecanum wheel system with %s serial transport for hardware comm.", system_info_.hardware_parameters["hardware_transport_type"]);
+      RCLCPP_INFO(rclcpp::get_logger(mecanum_wheel_system::LOGNAME), "Initialized mecanum wheel system with %s serial transport for hardware comm.", system_info_.hardware_parameters["hardware_transport_type"].c_str());
 
       return CallbackReturn::SUCCESS;
     }
 
     CallbackReturn MecanumWheelSystem::on_configure(const rclcpp_lifecycle::State &previous_state) {
-      hardware_comm_->init();
       hardware_comm_->start_heartbeat();
       
       return CallbackReturn::SUCCESS;
@@ -54,7 +53,7 @@ namespace mechai_hardwares {
       
       std::vector<hardware_interface::StateInterface> state_interfaces;
       for (auto joint : system_info_.joints) {
-        RCLCPP_INFO(rclcpp::get_logger(mecanum_wheel_system::LOGNAME), "Adding %s velocity state interface", joint.name);
+        RCLCPP_INFO(rclcpp::get_logger(mecanum_wheel_system::LOGNAME), "Adding %s velocity state interface", joint.name.c_str());
         state_interfaces.push_back(
           hardware_interface::StateInterface(
             joint.name,
@@ -72,7 +71,7 @@ namespace mechai_hardwares {
 
       std::vector<hardware_interface::CommandInterface> command_interfaces;
       for (auto joint : system_info_.joints) {
-        RCLCPP_INFO(rclcpp::get_logger(mecanum_wheel_system::LOGNAME), "Adding %s velocity command interface", joint.name);
+        RCLCPP_INFO(rclcpp::get_logger(mecanum_wheel_system::LOGNAME), "Adding %s velocity command interface", joint.name.c_str());
         command_interfaces.push_back(
           hardware_interface::CommandInterface(
             joint.name,
@@ -87,13 +86,15 @@ namespace mechai_hardwares {
 
     hardware_interface::return_type MecanumWheelSystem::read() {
       hardware_comm_->recieve();
+      return hardware_interface::return_type::OK;
     }
 
     hardware_interface::return_type MecanumWheelSystem::write() {
       hardware_comm_->send();
+      return hardware_interface::return_type::OK;
     }
-  }
-}
+  } // namespace mecanum_wheel_system
+} // namespace mechai_hardwares
 
 PLUGINLIB_EXPORT_CLASS(
   mechai_hardwares::mecanum_wheel_system::MecanumWheelSystem,
